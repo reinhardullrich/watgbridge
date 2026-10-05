@@ -162,6 +162,8 @@ func NewWhatsAppClient() error {
 
 	client := whatsmeow.NewClient(deviceStore, waClientLogger)
 	state.State.WhatsAppClient = client
+	// Incoming offline messages can arrive as soon as Connect starts.
+	client.AddEventHandler(WhatsAppEventHandler)
 
 	if client.Store.ID == nil {
 		qrChan, _ := client.GetQRChannel(context.Background())
