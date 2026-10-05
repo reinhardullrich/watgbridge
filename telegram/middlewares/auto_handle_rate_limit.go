@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"log"
-	"strconv"
 	"strings"
 	"time"
 
@@ -24,6 +23,9 @@ func (b *autoHandleRateLimitBotClient) RequestWithContext(ctx context.Context,
 	}
 
 	for {
+		if err := ctx.Err(); err != nil {
+			return nil, err
+		}
 		response, err := b.BotClient.RequestWithContext(ctx, token, method, params, opts)
 		if err == nil {
 			return response, err
@@ -35,10 +37,18 @@ func (b *autoHandleRateLimitBotClient) RequestWithContext(ctx context.Context,
 		}
 
 		if tgError.Code == 429 {
-			fields := strings.Fields(tgError.Description)
-			timeToSleep, _ := strconv.ParseInt(fields[len(fields)-1], 10, 64)
+			if tgError.ResponseParams == nil || tgError.ResponseParams.RetryAfter <= 0 {
+				return response, err
+			}
+			timeToSleep := tgError.ResponseParams.RetryAfter
 			log.Printf("[auto_handle_rate_limit] sleeping for %v seconds", timeToSleep)
-			time.Sleep(time.Second * time.Duration(timeToSleep))
+			timer := time.NewTimer(time.Second * time.Duration(timeToSleep))
+			select {
+			case <-ctx.Done():
+				timer.Stop()
+				return nil, ctx.Err()
+			case <-timer.C:
+			}
 			continue
 		}
 

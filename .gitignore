@@ -18,6 +18,7 @@
 !sample_config.yaml
 
 /watgbridge
+/private/
 *.db
 *.db-journal
 watgbridge-build/

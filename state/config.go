@@ -17,32 +17,36 @@ type Config struct {
 	GoExecutable     string `yaml:"go_executable"`
 	FfmpegExecutable string `yaml:"ffmpeg_executable"`
 	DebugMode        bool   `yaml:"debug_mode"`
+	HistorySync      struct {
+		Enabled   bool   `yaml:"enabled"`
+		DaysLimit uint32 `yaml:"days_limit"`
+	} `yaml:"history_sync"`
 
 	UseGithHubBinaries bool   `yaml:"use_github_binaries"`
 	Architecture       string `yaml:"architecture"`
 
 	Telegram struct {
-		BotToken            string  `yaml:"bot_token"`
-		APIURL              string  `yaml:"api_url"`
-		SudoUsersID         []int64 `yaml:"sudo_users_id"`
-		OwnerID             int64   `yaml:"owner_id"`
-		TargetChatID        int64   `yaml:"target_chat_id"`
-		SelfHostedAPI       bool    `yaml:"self_hosted_api"`
-		SendImagesAsFile    bool    `yaml:"send_images_as_file"`
+		BotToken             string  `yaml:"bot_token"`
+		APIURL               string  `yaml:"api_url"`
+		SudoUsersID          []int64 `yaml:"sudo_users_id"`
+		OwnerID              int64   `yaml:"owner_id"`
+		TargetChatID         int64   `yaml:"target_chat_id"`
+		SelfHostedAPI        bool    `yaml:"self_hosted_api"`
+		SendImagesAsFile     bool    `yaml:"send_images_as_file"`
 		SendStickersAsFile   bool    `yaml:"send_stickers_as_file"`
-		SkipVideoStickers   bool    `yaml:"skip_video_stickers"`
-		SkipSettingCommands bool    `yaml:"skip_setting_commands"`
-		SendMyPresence      bool    `yaml:"send_my_presence"`
-		SendMyReadReceipts  bool    `yaml:"send_my_read_receipts"`
-		SilentConfirmation  bool    `yaml:"silent_confirmation"`
-		ConfirmationType    string  `yaml:"confirmation_type"`
-		EmojiConfirmation   *bool   `yaml:"emoji_confirmation"`
-		SkipStartupMessage  bool    `yaml:"skip_startup_message"`
-		SpoilerViewOnce     bool    `yaml:"spoiler_as_viewonce"`
-		Reactions           bool    `yaml:"reactions"`
-		TagAllEnabled       bool    `yaml:"tag_all_enabled"`
-		AutoReactWhenAllRead bool   `yaml:"auto_react_when_all_read"`
-		AutoReactRemoveAfter int64  `yaml:"auto_react_remove_after_seconds"`
+		SkipVideoStickers    bool    `yaml:"skip_video_stickers"`
+		SkipSettingCommands  bool    `yaml:"skip_setting_commands"`
+		SendMyPresence       bool    `yaml:"send_my_presence"`
+		SendMyReadReceipts   bool    `yaml:"send_my_read_receipts"`
+		SilentConfirmation   bool    `yaml:"silent_confirmation"`
+		ConfirmationType     string  `yaml:"confirmation_type"`
+		EmojiConfirmation    *bool   `yaml:"emoji_confirmation"`
+		SkipStartupMessage   bool    `yaml:"skip_startup_message"`
+		SpoilerViewOnce      bool    `yaml:"spoiler_as_viewonce"`
+		Reactions            bool    `yaml:"reactions"`
+		TagAllEnabled        bool    `yaml:"tag_all_enabled"`
+		AutoReactWhenAllRead bool    `yaml:"auto_react_when_all_read"`
+		AutoReactRemoveAfter int64   `yaml:"auto_react_remove_after_seconds"`
 	} `yaml:"telegram"`
 
 	WhatsApp struct {

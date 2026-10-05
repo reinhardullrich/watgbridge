@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"watgbridge/database"
+	"watgbridge/history"
 	"watgbridge/state"
 	"watgbridge/utils"
 
@@ -33,6 +34,10 @@ func WhatsAppEventHandler(evt interface{}) {
 	cfg := state.State.Config
 
 	switch v := evt.(type) {
+	case *events.HistorySync:
+		if err := history.Receive(v); err != nil {
+			state.State.Logger.Error("history cache failed", zap.Error(err))
+		}
 	case *events.LoggedOut:
 		LogoutHandler(v)
 
@@ -62,6 +67,9 @@ func WhatsAppEventHandler(evt interface{}) {
 		UndecryptableMessageEventHandler(v)
 
 	case *events.Message:
+		if err := history.Save(v); err != nil {
+			state.State.Logger.Error("history anchor storage failed", zap.Error(err))
+		}
 		handleMessageEvent(cfg, v)
 	}
 }
@@ -530,6 +538,17 @@ func MessageFromMeEventHandler(text string, v *events.Message, isEdited bool, is
 // ============================================================
 
 func MessageFromOthersEventHandler(text string, v *events.Message, isEdited bool, isDocument bool) {
+	if state.State.Config.HistorySync.Enabled {
+		history.DeliveryMu.Lock()
+		defer history.DeliveryMu.Unlock()
+		blocked, err := history.HasDelivery(v.Info.Chat.String(), v.Info.ID)
+		if err != nil || blocked {
+			if err != nil {
+				state.State.Logger.Error("history delivery lookup failed", zap.Error(err))
+			}
+			return
+		}
+	}
 	var (
 		cfg      = state.State.Config
 		logger   = state.State.Logger

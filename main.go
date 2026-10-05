@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"watgbridge/database"
+	"watgbridge/history"
 	"watgbridge/modules"
 	"watgbridge/state"
 	"watgbridge/telegram"
@@ -178,6 +179,9 @@ func main() {
 		)
 	}
 
+	if err = history.Init(); err != nil {
+		logger.Fatal("failed to initialize history storage", zap.Error(err))
+	}
 	err = telegram.NewTelegramClient()
 	if err != nil {
 		logger.Fatal("failed to initialize telegram client",

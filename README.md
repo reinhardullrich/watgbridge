@@ -74,6 +74,16 @@ You will need the following installed on your system:
 
 It is recommended to configure a supervisor/init service to automatically restart the bot if it disconnects. A template systemd service file is provided in `watgbridge.service.sample`.
 
+## Optional history import
+
+This fork adds opt-in local history caching and owner-only `/history` commands
+for fetching older messages from the phone and importing selected batches into
+Telegram. Text, captions, original dates and available attachments are preserved;
+existing placeholders can be upgraded without reposting the message.
+See [history import](docs/history-import.md)
+for setup, limits and safety behavior. The startup-handler race fix is a separate
+commit. Live history availability depends on the phone and is not guaranteed.
+
 ## Running with Docker
 
 You can run the bridge inside a Docker container using the pre-built images or Docker Compose.

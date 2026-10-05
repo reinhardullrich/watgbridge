@@ -61,6 +61,7 @@ func AddTelegramHandlers() {
 	).SetAllowEdited(true), DispatcherForwardHandlerGroup)
 
 	commands = append(commands,
+		waTgBridgeCommand{handlers.NewCommand("history", HistoryCommandHandler), "Inspect, fetch or import historical messages (owner only)"},
 		waTgBridgeCommand{
 			handlers.NewCommand("start", StartCommandHandler),
 			"",

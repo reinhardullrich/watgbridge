@@ -6,6 +6,11 @@ go_executable: /usr/bin/go
 ffmpeg_executable: /usr/bin/ffmpeg
 debug_mode: false
 
+# Opt-in local history cache. Does not automatically upload history to Telegram.
+history_sync:
+  enabled: false
+  days_limit: 90                  # Requested at pairing; phone may return less.
+
 use_github_binaries: false              # Set to true if you want to use pre-built binaries from GitHub
 architecture:                           # Set it to aarch64 or amd64 based on your machine architecture to update using prebuilt releases
 

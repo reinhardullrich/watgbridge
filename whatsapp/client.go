@@ -54,7 +54,6 @@ const (
 	clientModeAndroidBusiness = "android_business"
 )
 
-
 func NewWhatsAppClient() error {
 
 	var (
@@ -147,6 +146,12 @@ func NewWhatsAppClient() error {
 		}
 
 		logger.Info("WhatsApp client configured as Web client")
+	}
+
+	if cfg.HistorySync.Enabled {
+		store.DeviceProps.RequireFullSync = proto.Bool(true)
+		store.DeviceProps.HistorySyncConfig.FullSyncDaysLimit = proto.Uint32(cfg.HistorySync.DaysLimit)
+		store.DeviceProps.HistorySyncConfig.RecentSyncDaysLimit = proto.Uint32(cfg.HistorySync.DaysLimit)
 	}
 
 	container, err := sqlstore.New(context.Background(), state.State.Config.WhatsApp.LoginDatabase.Type,
